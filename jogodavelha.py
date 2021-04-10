@@ -1,11 +1,14 @@
-import random, os, time
+from random import randrange
+from os import system, name
+from time import sleep
 
 p = []
 final = int(1)
 coluna = linha = int(0)
 
-for i in range(1,5):
-    p.append([' ']*4)
+for i in range(1, 5):
+    p.append([' '] * 4)
+
 
 def jogada(cjogada, ljogada, jogador):
     if p[cjogada][ljogada] in 'XO':
@@ -14,8 +17,9 @@ def jogada(cjogada, ljogada, jogador):
         p[cjogada][ljogada] = jogador
         return True
 
+
 def mostratela():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    system('cls' if name == 'nt' else 'clear')
 
     print('\033[1;34m\n\n')
     print(f'        C1  C2  C3  \n')
@@ -25,6 +29,7 @@ def mostratela():
     print(f'       -----------')
     print(f'   L3   {p[1][3]} | {p[2][3]} | {p[3][3]}')
     print('\n')
+
 
 def validavencedor():
     valida = ''
@@ -52,7 +57,7 @@ def validavencedor():
             if p[a][a] != ' ':
                 valida = valida + p[a][a]
                 if valida == 'XXX' or valida == 'OOO':
-                    valida = valida + p[x][y]
+                    valida = valida + p[0][0]
 
     if len(valida) != 4:
         valida = ''
@@ -61,7 +66,7 @@ def validavencedor():
             if p[b][c] != ' ':
                 valida = valida + p[b][c]
             if valida == 'XXX' or valida == 'OOO':
-                valida = valida + p[x][y]
+                valida = valida + p[0][0]
             c = c - 1
 
     if len(valida) == 4:
@@ -69,18 +74,26 @@ def validavencedor():
         print(f'\033[0;33m O VENCEDOR FOI: {vencedor}')
         exit(0)
 
+
 while not final == 6:
     mostratela()
     validavencedor()
-    coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
-    linha  = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+
+    while True:
+        coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
+        if 0 <= coluna <= 3:
+            break
+
+    while True:
+        linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+        if 0 <= linha <= 3:
+            break
 
     resp = jogada(coluna, linha, 'X')
-
-    while resp == False:
+    while not resp:
         print(f'    \033[0;31m Jogador, essa posição já tem uma jogada definida: {p[coluna][linha]}')
         coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
-        linha  = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+        linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
         resp = jogada(coluna, linha, 'X')
 
     mostratela()
@@ -88,18 +101,17 @@ while not final == 6:
     validavencedor()
 
     if final < 6:
-        coluna = int(random.randrange(1, 4))
-        linha  = int(random.randrange(1, 4))
+        coluna = int(randrange(1, 4))
+        linha = int(randrange(1, 4))
         resp = jogada(coluna, linha, 'O')
-        while resp == False:
-            coluna = int(random.randrange(1, 4))
-            linha  = int(random.randrange(1, 4))
+        while not resp:
+            coluna = int(randrange(1, 4))
+            linha = int(randrange(1, 4))
             resp = jogada(coluna, linha, 'O')
 
         print('\033[0;37mComputador esta pensando...')
-        time.sleep(0.5)
-        #mostratela()
-
+        sleep(0.5)
+        # mostratela()
 
 mostratela()
 validavencedor()
