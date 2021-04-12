@@ -2,13 +2,6 @@ from random import randrange
 from os import system, name
 from time import sleep
 
-p = []
-final = int(1)
-coluna = linha = int(0)
-
-for i in range(1, 5):
-    p.append([' '] * 4)
-
 
 def jogada(cjogada, ljogada, jogador):
     if p[cjogada][ljogada] in 'XO':
@@ -74,45 +67,70 @@ def validavencedor():
         print(f'\033[0;33m O VENCEDOR FOI: {vencedor}')
         exit(0)
 
+# --------------------- PROGRAMA PRINCIPAL
+p = []
+final = int(1)
+coluna = linha = int(0)
 
-while not final == 6:
-    mostratela()
-    validavencedor()
+for i in range(1, 5):
+    p.append([' '] * 4)
 
-    while True:
-        coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
-        if 0 <= coluna <= 3:
-            break
+try:
+    while not final == 6:
+        mostratela()
+        validavencedor()
 
-    while True:
-        linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
-        if 0 <= linha <= 3:
-            break
+        while True:
+            try:
+                coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
+            except ValueError:
+                print('\033[0;31mDIGITE ALGO ENTRE 1 E 3')
+            #except KeyboardInterrupt:
+            #    print('\nUSUARIO ABORTOU O JOGO, NÂO TEVE VENCEDOR.')
+            #    exit(0)
+            else:
+                if 0 <= coluna <= 3:
+                    break
 
-    resp = jogada(coluna, linha, 'X')
-    while not resp:
-        print(f'    \033[0;31m Jogador, essa posição já tem uma jogada definida: {p[coluna][linha]}')
-        coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
-        linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+        while True:
+            try:
+                linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+            except ValueError:
+                print('\033[0;31mDIGITE ALGO ENTRE 1 E 3')
+            #except KeyboardInterrupt:
+            #    print('\n\033[0;31mUSUARIO ABORTOU O JOGO, NÂO TEVE VENCEDOR.\033[m')
+            #    exit(0)
+            else:
+                if 0 <= linha <= 3:
+                    break
+
         resp = jogada(coluna, linha, 'X')
-
-    mostratela()
-    final += + 1
-    validavencedor()
-
-    if final < 6:
-        coluna = int(randrange(1, 4))
-        linha = int(randrange(1, 4))
-        resp = jogada(coluna, linha, 'O')
         while not resp:
+            print(f'    \033[0;31m Jogador, essa posição já tem uma jogada definida: {p[coluna][linha]}')
+            coluna = int(input('\033[0;32mDigite uma coluna [1 a 3]: '))
+            linha = int(input('\033[0;32mDigite uma linha [1 a 3]: '))
+            resp = jogada(coluna, linha, 'X')
+
+        mostratela()
+        final += + 1
+        validavencedor()
+
+        if final < 6:
             coluna = int(randrange(1, 4))
             linha = int(randrange(1, 4))
             resp = jogada(coluna, linha, 'O')
+            while not resp:
+                coluna = int(randrange(1, 4))
+                linha = int(randrange(1, 4))
+                resp = jogada(coluna, linha, 'O')
 
-        print('\033[0;37mComputador esta pensando...')
-        sleep(0.5)
-        # mostratela()
-
-mostratela()
-validavencedor()
-print('\033[0;33mJOGO ACABOU, DEU VELHA!!!')
+            print('\033[0;37mComputador esta pensando...')
+            sleep(0.5)
+            # mostratela()
+except KeyboardInterrupt:
+    print('\n\033[0;31mUSUARIO ABORTOU O JOGO, NÂO TEVE VENCEDOR.\033[m')
+    exit(0)
+else:
+    mostratela()
+    validavencedor()
+    print('\033[0;33mJOGO ACABOU, DEU VELHA!!!')
